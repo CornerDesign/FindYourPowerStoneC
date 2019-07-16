@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>FIND YOUR POWER STONE</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,user-scalable=no, initial-scale=1">
+    <script src = "https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="build/three.js"></script>
+</head>
+<style>
+    body {
+        margin: 0px;
+        background-color: #000000;
+        overflow: hidden;
+    }
+    #container{
+        margin: 0px;
+        overflow:hidden;
+    }
+    #Background {
+        background-color: #000000;
+        background-image:url("textures/BackgroundStart.jpg");
+	background-reapeat:no-repeat;
+	background-size:100% 100%;
+/*        height: -webkit-fill-available; */
+	height: 100%;
+        position: absolute;
+        top: 0px; width: 100%;
+        color: #ffffff;
+        padding: 5px;
+        font-family:Monospace;
+        font-size:13px;
+        font-weight: bold;
+        text-align:center;
+        box-sizing: border-box;
+	z-index = 0;
+    }
+    
+    #Main {
+        position: absolute;
+        top: 83%; width: 100%;
+        color: #ffffff;
+        padding: 5px;
+        font-family:Monospace;
+        font-size:13px;
+        font-weight: bold;
+        text-align:center;
+        box-sizing: border-box;
+    }
+    #Loading {
+	position: absolute;
+        top: 40%; width: 100%;
+        color: white;
+        padding: 5px;
+        font-family:Monospace;
+        font-size:13px;
+        font-weight: bold;
+        text-align:center;
+        box-sizing: border-box;
+        z-index = 1;
+    }
+    #CountingCollect {
+	position: absolute;
+        bottom: 2%; width: 100%;
+        color: white;
+        padding: 5px;
+        font-family:Monospace;
+        font-size:13px;
+        font-weight: bold;
+        text-align:center;
+        box-sizing: border-box;
+        z-index = 1;
+    }
+	
+    #Tutorial {
+        position: absolute;
+        top: 100px; width: 100%;
+        color: white;
+        padding: 5px;
+        font-family:Monospace;
+        font-size:13px;
+        font-weight: bold;
+        text-align:center;
+        box-sizing: border-box;
+        z-index = 1;
+    }
+    
+    #EndingGame {
+        position: absolute;
+        top: 41%; width: 100%;
+        color: white;
+        padding: 5px;
+        font-family:Monospace;
+        font-size:13px;
+        font-weight: bold;
+        text-align:center;
+        box-sizing: border-box;
+        z-index = 1;
+    }
+    
+    a {
+        color: #ff8800;
+    }
+        
+    .mybtn {
+        background-color: rgba(0, 0, 0, 0);
+        border: 2px solid;
+        color: white;
+        padding: 10px;
+        width: 150 px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        font-weight: bold;
+        letter-spacing:2px;
+        margin: 4px 30px;  
+        -webkit-transition-duration: 0.4s; /* Safari */
+        transition-duration: 0.4s;
+        cursor: pointer;  
+    }
+    .clickmybtn {
+        background-color: rgba(0, 0, 0, 0);
+        color: #e6e6e6;
+        border: 2px solid #e6e6e6;
+    }
+    .clickmybtn:hover {
+        background-color: #e6e6e6;
+        border: 2px solid #e6e6e6;
+        color: #1a1a1a;
+    }
+</style>
+<body>
+    <div id = "container">
+        <div id="Background">
+        </div>
+        
+        <div id="Main">
+            <button class ="mybtn clickmybtn" onclick="LanguageFunction(1)"> 繁體中文 </button>
+            <button class ="mybtn clickmybtn" onclick="LanguageFunction(2)"> English </button>
+        </div>
+        <div id="Loading">
+	<img id = "Rolling" src="textures/Rolling.png" alt="Rolling" width="50" > <br/>
+	</div>
+	<div id="CountingCollect">
+	<h3 id = "Collecttext"></h3>
+	</div>
+        <div id="Tutorial">
+            <img id = "tutorialimg " src="textures/phoneturn.png" alt="tutorial" width="100" > <br/>
+            <h3 id = "tutorialtext">旋轉手機尋找能力寶石</h3>
+        </div>
+        
+	<div id="EndingGame">
+            <input class="mybtn clickmybtn" id = "EndingButton" type="button" onclick="EndGameLink()" value="來去抽獎" />
+        </div>
+       
+        <div id="Debug">
+             <p id="Counting"></p>
+        </div>
+	      
+    </div>
+        
+    <script src="build/three.js"></script>
+    <script src="js/ar.js"></script>
+    <script src="js/controls/DeviceOrientationControls.js"></script>
+    <script src="js/WebGL.js"></script>
+    <script src="js/threex.domevents.js"></script>
+    <script src="js/TweenMax.min.js"></script>
+    <script src="js/OBJLoader.js"></script>
+    <script src="js/MTLLoader.js"></script>
+
+<script>
+    Tutorial.style.display = "none";
+    EndingGame.style.display = "none";
+    Main.style.display = "none";
+    CountingCollect.style.display = "none";
+    TweenMax.from("#Background", 0.5 , { y:-5,opacity:0});
+    TweenMax.from("#Rolling", 0.5 , { y:-5,opacity:0 ,delay:1});	
+    LoadImageFirst();
+    TweenMax.to("#Rolling", 1 , { rotation:359 , delay:1 ,ease: Power0.easeNone, repeat:2.5 ,onComplete:function(){
+	Main.style.display = "block";
+    	TweenMax.from("#Main", 0.5 , { y:-5,opacity:0});
+    	TweenMax.to("#Rolling", 0.5 , { y:-5,opacity:0 ,onComplete:function(){
+		Rolling.style.display = "none";
+	}},"-=0.5");
+    }});
+	
+    var StartGame = false;
+    var CountNumber = 0 ;
+    var Language = "Chinese";
+    var Endlink = false;
+    function LanguageFunction(language){
+        Tutorial.style.display = "block";
+        if(language == 1){
+            Language = "Chinese";
+            document.getElementById("tutorialtext").innerHTML = "旋轉手機尋找能力寶石" ;
+	    document.getElementById("EndingButton").value = "來去抽獎";
+	    CountingCollect.style.display = "block";
+	    document.getElementById("Collecttext").innerHTML = "還有5個寶石待收集";
+	    TweenMax.from("#CountingCollect", 0.5 , { y:-5,opacity:0 ,delay:1.25} );
+            console.log("chinese");
+        }if(language == 2){
+            Language = "English";
+            document.getElementById("tutorialtext").innerHTML = "Turn your Phone to find power stone" ;
+	    document.getElementById("EndingButton").value = "Get the prize";
+	    CountingCollect.style.display = "block";
+	    document.getElementById("Collecttext").innerHTML = "5 stones left to be collected";
+	    TweenMax.from("#CountingCollect", 0.5 , { y:-5,opacity:0 ,delay:1.25} );
+            console.log("English");
+        }
+        StartGamefunction();
+    }
+    
+    function StartGamefunction(){
+        StartGame = true;
+        TweenMax.to("#Background", 0.5 , { y:-5,opacity:0});
+        TweenMax.to("#Main", 0.5 , { y:-5,opacity:0,delay:0.25});
+        document.getElementById("Background").style.backgroundImage = "url(textures/BackgroundEnd.jpg)";
+        TweenMax.from("#Tutorial", 0.5 , { y:-5,opacity:0 ,delay:1} );
+        TweenMax.to("#Tutorial", 0.5 , { opacity:0 ,delay:5} );
+        init();
+        animate();
+        var domEvents = new THREEx.DomEvents(camera, renderer.domElement);
+        domEvents.addEventListener(scene.getObjectByName("DiamondR1cube"), 'touchstart' , event =>{ infoanim("R1"); })
+        domEvents.addEventListener(scene.getObjectByName("DiamondG1cube"), 'touchstart' , event =>{ infoanim("G1"); })
+        domEvents.addEventListener(scene.getObjectByName("DiamondB1cube"), 'touchstart' , event =>{ infoanim("B1"); })
+        domEvents.addEventListener(scene.getObjectByName("DiamondP1cube"), 'touchstart' , event =>{ infoanim("P1"); })
+        domEvents.addEventListener(scene.getObjectByName("DiamondY1cube"), 'touchstart' , event =>{ infoanim("Y1"); })
+        domEvents.addEventListener(scene.getObjectByName("DiamondO1cube"), 'touchstart' , event =>{ infoanim("O1"); })
+	domEvents.addEventListener(scene.getObjectByName("DiamondO2cube"), 'touchstart' , event =>{ infoanim("O2"); })
+	    
+        domEvents.addEventListener(scene.getObjectByName("DiamondR1Wcube"), 'touchstart' , event =>{ infoanim("R1W"); })
+        domEvents.addEventListener(scene.getObjectByName("DiamondG1Wcube"), 'touchstart' , event =>{ infoanim("G1W"); })
+        domEvents.addEventListener(scene.getObjectByName("DiamondB1Wcube"), 'touchstart' , event =>{ infoanim("B1W"); })
+        domEvents.addEventListener(scene.getObjectByName("DiamondP1Wcube"), 'touchstart' , event =>{ infoanim("P1W"); })
+        domEvents.addEventListener(scene.getObjectByName("DiamondY1Wcube"), 'touchstart' , event =>{ infoanim("Y1W"); })
+	
+        domEvents.addEventListener(scene.getObjectByName("DiamondM1cube"), 'touchstart' , event =>{ infoanim("M1"); })
+        domEvents.addEventListener(scene.getObjectByName("DiamondM2cube"), 'touchstart' , event =>{ infoanim("M2"); })
+        domEvents.addEventListener(scene.getObjectByName("DiamondM3cube"), 'touchstart' , event =>{ infoanim("M3"); })
+        domEvents.addEventListener(scene.getObjectByName("DiamondM4cube"), 'touchstart' , event =>{ infoanim("M4"); })
+        domEvents.addEventListener(scene.getObjectByName("DiamondM5cube"), 'touchstart' , event =>{ infoanim("M5"); })       
+    }
+    var camera, scene, renderer, controls;
+    
+    function init(){
+        // init renderer
+        renderer = new THREE.WebGLRenderer({
+            antialias: true,
+            alpha: true
+        });
+	//renderer.setPixelRatio(window.devicePixelRatio);
+	    
+        renderer.setClearColor(new THREE.Color('lightgrey'), 0)
+	renderer.setSize( 1280, 960 );
+        //renderer.setSize( 960, 720 );
+	    //renderer.setSize( 640, 480 );
+	//renderer.setSize(window.innerWidth/2, window.innerHeight/2)
+        renderer.domElement.style.position = 'absolute'
+        renderer.domElement.style.top = '0px'
+        renderer.domElement.style.left = '0px'
+        document.body.appendChild( renderer.domElement );
+        // array of functions for the rendering loop
+        var onRenderFcts= [];
+        // init scene and camera
+        scene = new THREE.Scene();
+   
+        //Create a camera
+        camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.01, 1000 );
+
+        controls = new THREE.DeviceOrientationControls( camera );
+        scene.add(camera);
+    
+        //handle arToolkitSource
+        var arToolkitSource = new THREEx.ArToolkitSource({
+            sourceType : 'webcam',        
+        })
+        
+        arToolkitSource.init(function onReady(){
+            onResize()
+        })
+    
+        // handle resize
+        window.addEventListener('resize', function(){
+            onResize()
+        })
+        
+        function onResize(){
+            arToolkitSource.onResize()    
+            arToolkitSource.copySizeTo(renderer.domElement)    
+            if( arToolkitContext.arController !== null ){
+                arToolkitSource.copySizeTo(arToolkitContext.arController.canvas)    
+        }    
+    }
+	    
+    //initialize arToolkitContext
+    // create atToolkitContext
+    var arToolkitContext = new THREEx.ArToolkitContext({
+        cameraParametersUrl: THREEx.ArToolkitContext.baseURL + '../data/data/camera_para.dat',
+        detectionMode: 'mono',
+    })
+    // initialize it
+    arToolkitContext.init(function onCompleted(){
+        // copy projection matrix to camera
+        camera.projectionMatrix.copy( arToolkitContext.getProjectionMatrix() );
+    })
+    // update artoolkit on every frame
+    onRenderFcts.push(function(){
+        if( arToolkitSource.ready === false )    return
+        arToolkitContext.update( arToolkitSource.domElement )
+        
+        // update scene.visible if the marker is seen
+        scene.visible = camera.visible
+    })
+	    
+    // add an object in the scene
+    var ColorArray = new Array();
+    //對的
+    ColorArray[0] = '0xff0000';
+    ColorArray[1] = '0x00FF00';
+    ColorArray[2] = '0x0099ff';
+    ColorArray[3] = '0x9933ff';
+    ColorArray[4] = '0xffff00';
+    ColorArray[5] = '0xff6600';//橘色
+    //錯的
+    ColorArray[6] = '0xff0000';
+    ColorArray[7] = '0x00FF00';
+    ColorArray[8] = '0x0099ff';
+    ColorArray[9] = '0x9933ff';
+    ColorArray[10] = '0xffff00';
+    //random color array
+    var RandomColorArray = new Array();	    
+    RandomColorArray[0] = '0x4efdda';
+    RandomColorArray[1] = '0x00ffbf';
+    RandomColorArray[2] = '0xff00ff';
+    RandomColorArray[3] = '0x828585';
+    RandomColorArray[4] = '0xf4c0a8';
+    RandomColorArray[5] = '0x00c0a8';
+        
+    var NameArray = new Array();
+    //對的
+    NameArray[0] = 'DiamondR1';
+    NameArray[1] = 'DiamondG1';
+    NameArray[2] = 'DiamondB1';
+    NameArray[3] = 'DiamondP1';
+    NameArray[4] = 'DiamondY1';
+    NameArray[5] = 'DiamondO1';
+    NameArray[16] = 'DiamondO2';
+    //錯的
+    NameArray[6] = 'DiamondR1W';
+    NameArray[7] = 'DiamondG1W';
+    NameArray[8] = 'DiamondB1W';
+    NameArray[9] = 'DiamondP1W';
+    NameArray[10] = 'DiamondY1W';
+
+    //random
+    NameArray[11] = 'DiamondM1';
+    NameArray[12] = 'DiamondM2';
+    NameArray[13] = 'DiamondM3';
+    NameArray[14] = 'DiamondM4';
+    NameArray[15] = 'DiamondM5';
+        
+    //對的
+    AddNewModel( NameArray[0] , ColorArray[0] ,-90,60,-20);    //紅
+    AddNewModel( NameArray[1] , ColorArray[1] ,90,10,-30);     //綠
+    AddNewModel( NameArray[2] , ColorArray[2] ,20,0,90);       //藍
+    AddNewModel( NameArray[3] , ColorArray[3] ,90,30,40);      //紫
+    AddNewModel( NameArray[4] , ColorArray[4] ,40,-30,-90);    //黃
+    AddNewModel( NameArray[5] , ColorArray[5] ,-30,10,-90);    //橘
+    AddNewModel( NameArray[16] , ColorArray[5] ,-70,-50,90);    //橘
+    //錯的    
+    AddNewModel( NameArray[6] , ColorArray[6] ,-40,15,110);    //紅
+    AddNewModel( NameArray[7] , ColorArray[7] ,110,-60,-30);   //綠
+    AddNewModel( NameArray[8] , ColorArray[8] ,0,50,-110);     //藍
+    AddNewModel( NameArray[9] , ColorArray[9] ,-110,-20,40);   //紫
+    AddNewModel( NameArray[10] , ColorArray[10] ,0,-25,110);   //黃
+    //random
+    AddNewModel( NameArray[11] , RandomColorArray[Math.floor(Math.random()*RandomColorArray.length)] ,-130,Math.floor(Math.random()*260)-150,Math.floor(Math.random()*260)-150);  //綠
+    AddNewModel( NameArray[12] , RandomColorArray[Math.floor(Math.random()*RandomColorArray.length)] ,Math.floor(Math.random()*260)-150,Math.floor(Math.random()*260)-150,-130);   //紫
+    AddNewModel( NameArray[13] , RandomColorArray[Math.floor(Math.random()*RandomColorArray.length)] ,Math.floor(Math.random()*260)-150,-130,Math.floor(Math.random()*260)-150);   //黃
+    AddNewModel( NameArray[14] , RandomColorArray[Math.floor(Math.random()*RandomColorArray.length)] ,Math.floor(Math.random()*260)-150,Math.floor(Math.random()*260)-150,130);   //紫
+    AddNewModel( NameArray[15] , RandomColorArray[Math.floor(Math.random()*RandomColorArray.length)] ,Math.floor(Math.random()*260)-150,130,Math.floor(Math.random()*260)-150);   //黃
+
+	    
+    AddPlanet(Pl0texture,-150,Math.floor(Math.random()*160)-150,Math.floor(Math.random()*260)-150);
+    AddPlanet(Pl1texture,150,Math.floor(Math.random()*160)-150,Math.floor(Math.random()*260)-150);
+    AddPlanet(Pl2texture,Math.floor(Math.random()*260)-150,Math.floor(Math.random()*160)-150,-150);
+    AddPlanet(Pl3texture,160,Math.floor(Math.random()*160)+10,Math.floor(Math.random()*260)-150);
+    AddPlanet(Pl4texture,Math.floor(Math.random()*160)-150,Math.floor(Math.random()*160)-150,150);
+    AddPlanet(Pl5texture,Math.floor(Math.random()*160)-150,Math.floor(Math.random()*160)+10,160);
+    AddPlanet(Pl6texture,-160,Math.floor(Math.random()*160)+10,Math.floor(Math.random()*260)-150);
+    AddPlanet(Pl7texture,Math.floor(Math.random()*160)+10,Math.floor(Math.random()*160)-150,170);
+    AddPlanet(Pl8texture,Math.floor(Math.random()*260)-150,Math.floor(Math.random()*160)+10,-160);
+	  
+    //Add a light
+
+    var light = new THREE.DirectionalLight( 0xffffff );
+    light.position.set( 1, 1, 1 );
+    scene.add( light );
+    //var light = new THREE.DirectionalLight( 0x002288 );
+    var light = new THREE.DirectionalLight( 0xffffff );
+    light.position.set( -1, -1, -1 );
+    scene.add( light );
+    var light = new THREE.AmbientLight( 0x222222 );
+    //var light = new THREE.AmbientLight( 0xF3F3F3 );
+    scene.add( light );
+
+    window.addEventListener( 'resize', onWindowResize, false );    
+}
+    //////////////////////////////////////////////////////////////////////////////////     
+    function animate() {
+        window.requestAnimationFrame( animate );
+        controls.update();
+        renderer.render( scene, camera );
+    }
+    
+    function onWindowResize() {
+	
+	    if(camera.inPerspectiveMode){
+        camera.cameraP.aspect = window.innerWidth / window.innerHeight;
+        camera.cameraP.updateProjectionMatrix();
+    }
+    else{
+        camera.cameraO.left = window.innerWidth / - 2;
+        camera.cameraO.right = window.innerWidth / 2;
+        camera.cameraO.top = window.innerHeight / 2;
+        camera.cameraO.bottom = window.innerHeight / - 2;
+        camera.cameraO.updateProjectionMatrix();
+    }
+
+//    renderer.setSize( window.innerWidth, window.innerHeight );
+	    
+
+	   /* 
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize( window.innerWidth, window.innerHeight );
+	*/
+    }
+	
+    function LoadImageFirst(){
+	   
+    	var textureLoader = new THREE.TextureLoader();
+    	//對的
+    	R1texture = textureLoader.load( 'textures/redpeople.png' );       
+    	R1infotexture = textureLoader.load( 'textures/info/new1/redinfo.png' );
+    	R1info2texture = textureLoader.load( 'textures/info/new1/redinfo2.png' );
+    	G1texture = textureLoader.load( 'textures/greenpeople.png' );       
+    	G1infotexture = textureLoader.load( 'textures/info/new1/greeninfo.png' );
+    	G1info2texture = textureLoader.load( 'textures/info/new1/greeninfo2.png' );
+    	B1texture = textureLoader.load( 'textures/bluepeople.png' );       
+    	B1infotexture = textureLoader.load( 'textures/info/new1/blueinfo.png' );
+    	B1info2texture = textureLoader.load( 'textures/info/new1/blueinfo2.png' );
+    	P1texture = textureLoader.load( 'textures/purplepeople.png' );       
+    	P1infotexture = textureLoader.load( 'textures/info/new1/purpleinfo.png' );
+    	P1info2texture = textureLoader.load( 'textures/info/new1/purpleinfo2.png' );
+    	Y1texture = textureLoader.load( 'textures/yellowpeople.png' );       
+    	Y1infotexture = textureLoader.load( 'textures/info/new1/yellowinfo.png' );
+   	Y1info2texture = textureLoader.load( 'textures/info/new1/yellowinfo2.png' );
+    	O1texture = textureLoader.load( 'textures/orangepeople.png' );       
+    	O1infotexture = textureLoader.load( 'textures/info/new1/orangeinfo.png' );
+    	O1info2texture = textureLoader.load( 'textures/info/new1/orangeinfo2.png' );
+    	//錯的
+    	R1Wtexture = textureLoader.load( 'textures/wronganswer/new1/redwrong.png' );
+    	R1W2texture = textureLoader.load( 'textures/wronganswer/new1/redwrong2.png' );
+    	G1Wtexture = textureLoader.load( 'textures/wronganswer/new1/greenwrong.png' );
+    	G1W2texture = textureLoader.load( 'textures/wronganswer/new1/greenwrong2.png' );
+    	B1Wtexture = textureLoader.load( 'textures/wronganswer/new1/bluewrong.png' );
+    	B1W2texture = textureLoader.load( 'textures/wronganswer/new1/bluewrong2.png' );
+    	P1Wtexture = textureLoader.load( 'textures/wronganswer/new1/purplewrong.png' );
+    	P1W2texture = textureLoader.load( 'textures/wronganswer/new1/purplewrong2.png' );
+    	Y1Wtexture = textureLoader.load( 'textures/wronganswer/new1/yellowwrong.png' );
+    	Y1W2texture = textureLoader.load( 'textures/wronganswer/new1/yellowwrong2.png' );
+    	Wrongtexture = textureLoader.load( 'textures/wronganswer/new1/wrong.png' );
+    	Wrong2texture = textureLoader.load( 'textures/wronganswer/new1/wrong2.png' );
+	    
+	//星球
+	Pl0texture = textureLoader.load( 'textures/planet/planet0.png' );
+	Pl1texture = textureLoader.load( 'textures/planet/planet1.png' );
+	Pl2texture = textureLoader.load( 'textures/planet/planet2.png' );
+   	Pl3texture = textureLoader.load( 'textures/planet/planet3.png' );
+	Pl4texture = textureLoader.load( 'textures/planet/planet4.png' );
+	Pl5texture = textureLoader.load( 'textures/planet/planet5.png' );
+	Pl6texture = textureLoader.load( 'textures/planet/planet6.png' );
+	Pl7texture = textureLoader.load( 'textures/planet/planet7.png' );
+	Pl8texture = textureLoader.load( 'textures/planet/planet8.png' );
+    }
+	
+	
+   //生成model
+    function AddNewModel( MeshName , ModelColor , x , y , z ){
+        var loader = new THREE.OBJLoader()
+        loader.load( 'model/Diamond.obj', function ( object ) {
+            object.traverse( function ( child ) {
+                if ( child instanceof THREE.Mesh ) {
+                    child.material.color.setHex(ModelColor);
+                }
+            }
+        );
+        scene.add( object );
+        object.scale.set(0.45,0.45,0.45);
+        object.name = MeshName;     
+        object.position.set(x,y,z);
+	TweenMax.to(object.rotation,600 , {y:360,x:0,z:0 , ease: Power0.easeNone , repeat:-1} );
+        console.log("Name"+object.name +"Color"+ ModelColor + "object.position"+object.position.y);
+        });
+        var cubegeometry = new THREE.BoxGeometry( 15 , 15 , 15 );
+        var cubematerial = new THREE.MeshBasicMaterial( {  color: 0xFFF000,  transparent : true,  opacity:0 });
+        var cubemesh = new THREE.Mesh( cubegeometry, cubematerial );
+        cubemesh.position.set(x,y+5,z) ;
+	cubemesh.lookAt( camera.position );
+        scene.add( cubemesh );
+        cubemesh.name = MeshName+"cube";
+        console.log("cubeName"+cubemesh.name);
+    }
+
+
+    //生成planet
+    function AddPlanet( TextureName ,x,y,z){
+ 	var geometry = new THREE.PlaneGeometry(25,25);
+   	var material = new THREE.MeshBasicMaterial( { map: TextureName } );
+    	planemesh = new THREE.Mesh( geometry, material );
+    	planemesh.position.set( x , y , z);
+    	planemesh.lookAt(camera.position);
+    	scene.add( planemesh );    
+    }
+	
+    //要出現的資訊        
+    function infoanim(DName){
+        if(DName == "R1"){
+            this.R1 = new TimelineMax();
+            DiamondR1cube = scene.getObjectByName("DiamondR1cube"); 
+            this.R1.to(DiamondR1cube.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut});
+            //定義寶石名稱
+            DiamondR1 = scene.getObjectByName("DiamondR1"); 
+            this.R1.to(DiamondR1.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},"-=0.5");		
+            var geometry = new THREE.PlaneGeometry( 13.35 , 30.54 );
+            var material = new THREE.MeshBasicMaterial( { map: R1texture ,transparent: true, opacity: 0.95 } );
+            DiamondR1people = new THREE.Mesh( geometry, material );
+            DiamondR1people.position.copy(DiamondR1.position);   
+            DiamondR1people.lookAt( camera.position );
+	    DiamondR1people.renderOrder = 1;
+            scene.add( DiamondR1people );
+		
+            var geometry = new THREE.PlaneGeometry( 75,75 );
+            if( Language == "Chinese"){
+                var material = new THREE.MeshBasicMaterial( { map: R1infotexture ,transparent: true, opacity: 0.95 } );
+            }else if(Language == "English"){
+                var material = new THREE.MeshBasicMaterial( { map: R1info2texture ,transparent: true, opacity: 0.95 } );
+            }
+            DiamondR1info = new THREE.Mesh( geometry, material );
+            DiamondR1info.position.copy(DiamondR1.position);         
+            DiamondR1info.lookAt( camera.position );
+	    DiamondR1info.renderOrder = 2;	
+            scene.add( DiamondR1info );
+            this.R1.from(DiamondR1people.scale, 0.5 , { x:0 , y:0 , z:0 ,ease: Back.easeOut.config(1.4)},"-=0.25");
+            this.R1.from(DiamondR1info.scale, 0.5 , { x:0 , y:0 , z:0 , ease: Back.easeOut.config(1.4)},"-=0.35");
+            this.R1.to(DiamondR1people.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},6);
+            this.R1.to(DiamondR1info.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},6.15);
+            EndGameCountDown();
+        }
+        if(DName == "G1"){
+            this.G1 = new TimelineMax();
+            DiamondG1cube = scene.getObjectByName("DiamondG1cube"); 
+            this.G1.to(DiamondG1cube.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut});
+            //定義寶石名稱
+            DiamondG1 = scene.getObjectByName("DiamondG1"); 
+            this.G1.to(DiamondG1.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},"-=0.5");
+            var geometry = new THREE.PlaneGeometry( 14.23 , 25.81 );
+            var material = new THREE.MeshBasicMaterial( { map: G1texture ,transparent: true, opacity: 0.95 } );
+            DiamondG1people = new THREE.Mesh( geometry, material );
+            DiamondG1people.position.copy(DiamondG1.position);       
+            DiamondG1people.lookAt( camera.position );
+	    DiamondG1people.renderOrder = 1;
+            scene.add( DiamondG1people );
+            var geometry = new THREE.PlaneGeometry( 75,75 );
+            if( Language == "Chinese"){
+                var material = new THREE.MeshBasicMaterial( { map: G1infotexture ,transparent: true, opacity: 0.95 } );
+            }else if(Language == "English"){
+                var material = new THREE.MeshBasicMaterial( { map: G1info2texture ,transparent: true, opacity: 0.95 } );
+            }
+            DiamondG1info = new THREE.Mesh( geometry, material );
+            DiamondG1info.position.copy(DiamondG1.position);    
+            DiamondG1info.lookAt( camera.position );
+	    DiamondG1info.renderOrder = 2;
+            scene.add( DiamondG1info );
+            this.G1.from(DiamondG1people.scale, 0.5 , { x:0 , y:0 , z:0 ,ease: Back.easeOut.config(1.4)},"-=0.25");
+            this.G1.from(DiamondG1info.scale, 0.5 , { x:0 , y:0 , z:0 , ease: Back.easeOut.config(1.4)},"-=0.35");
+            this.G1.to(DiamondG1people.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},6);
+            this.G1.to(DiamondG1info.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},6.15);
+            EndGameCountDown();
+        }
+        if(DName == "B1"){
+            this.B1 = new TimelineMax();
+            DiamondB1cube = scene.getObjectByName("DiamondB1cube"); 
+            this.B1.to(DiamondB1cube.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut});
+            //定義寶石名稱
+            DiamondB1 = scene.getObjectByName("DiamondB1"); 
+            this.B1.to(DiamondB1.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},"-=0.5");
+            var geometry = new THREE.PlaneGeometry( 13.73 , 30.54 );
+            var material = new THREE.MeshBasicMaterial( { map: B1texture ,transparent: true, opacity: 0.95 } );
+            DiamondB1people = new THREE.Mesh( geometry, material );
+            DiamondB1people.position.copy(DiamondB1.position);      
+            DiamondB1people.lookAt( camera.position );
+	    DiamondB1people.renderOrder = 1;
+            scene.add( DiamondB1people );
+            var geometry = new THREE.PlaneGeometry( 75,75 );
+            if( Language == "Chinese"){
+                var material = new THREE.MeshBasicMaterial( { map: B1infotexture ,transparent: true, opacity: 0.95 } );
+            }else if(Language == "English"){
+                var material = new THREE.MeshBasicMaterial( { map: B1info2texture ,transparent: true, opacity: 0.95 } );
+            }
+            DiamondB1info = new THREE.Mesh( geometry, material );
+            DiamondB1info.position.copy(DiamondB1.position);         
+            DiamondB1info.lookAt( camera.position );
+	    DiamondB1info.renderOrder = 2;
+            scene.add( DiamondB1info );
+            this.B1.from(DiamondB1people.scale, 0.5 , { x:0 , y:0 , z:0 , ease: Back.easeOut.config(1.4)},"-=0.25");
+            this.B1.from(DiamondB1info.scale, 0.5 , { x:0 , y:0 , z:0 , ease: Back.easeOut.config(1.4)},"-=0.35");
+            this.B1.to(DiamondB1people.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},6);
+            this.B1.to(DiamondB1info.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},6.15);
+            EndGameCountDown();
+        }
+        if(DName == "P1"){
+            this.P1 = new TimelineMax();
+            DiamondP1cube = scene.getObjectByName("DiamondP1cube"); 
+            this.P1.to(DiamondP1cube.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut});
+            //定義寶石名稱
+            DiamondP1 = scene.getObjectByName("DiamondP1"); 
+            this.P1.to(DiamondP1.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},"-=0.5");
+            var geometry = new THREE.PlaneGeometry( 15 , 24.71 );//16.62 , 27.46
+            var material = new THREE.MeshBasicMaterial( { map: P1texture ,transparent: true, opacity: 0.95 } );
+            DiamondP1people = new THREE.Mesh( geometry, material );
+            DiamondP1people.position.copy(DiamondP1.position);   
+            DiamondP1people.lookAt( camera.position );
+		DiamondP1people.renderOrder = 1;
+            scene.add( DiamondP1people );
+            var geometry = new THREE.PlaneGeometry( 75,75 );
+            if( Language == "Chinese"){
+                var material = new THREE.MeshBasicMaterial( { map: P1infotexture ,transparent: true, opacity: 0.95 } );
+            }else if(Language == "English"){
+                var material = new THREE.MeshBasicMaterial( { map: P1info2texture ,transparent: true, opacity: 0.95 } );
+            }
+            DiamondP1info = new THREE.Mesh( geometry, material );
+            DiamondP1info.position.copy(DiamondP1.position);       
+            DiamondP1info.lookAt( camera.position );
+		DiamondP1info.renderOrder = 2;
+            scene.add( DiamondP1info );
+            this.P1.from(DiamondP1people.scale, 0.5 , { x:0 , y:0 , z:0 , ease: Back.easeOut.config(1.4)},"-=0.25");
+            this.P1.from(DiamondP1info.scale, 0.5 , { x:0 , y:0 , z:0 , ease: Back.easeOut.config(1.4)},"-=0.35");
+            this.P1.to(DiamondP1people.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},6);
+            this.P1.to(DiamondP1info.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},6.15);
+            EndGameCountDown();
+        }
+        if(DName == "Y1"){
+            this.Y1 = new TimelineMax();
+            DiamondY1cube = scene.getObjectByName("DiamondY1cube"); 
+            this.Y1.to(DiamondY1cube.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut});
+            //定義寶石名稱
+            DiamondY1 = scene.getObjectByName("DiamondY1"); 
+            this.Y1.to(DiamondY1.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},"-=0.5");
+            var geometry = new THREE.PlaneGeometry( 14.62 , 27.54 );//腳色*2
+            var material = new THREE.MeshBasicMaterial( { map: Y1texture ,transparent: true, opacity: 0.95 } );
+            DiamondY1people = new THREE.Mesh( geometry, material );
+            DiamondY1people.position.copy(DiamondY1.position);        
+            DiamondY1people.lookAt( camera.position );
+		DiamondY1people.renderOrder = 1;
+            scene.add( DiamondY1people );
+            var geometry = new THREE.PlaneGeometry( 75,75 );
+            if( Language == "Chinese"){
+                var material = new THREE.MeshBasicMaterial( { map: Y1infotexture ,transparent: true, opacity: 0.95 } );
+            }else if(Language == "English"){
+                var material = new THREE.MeshBasicMaterial( { map: Y1info2texture ,transparent: true, opacity: 0.95 } );
+            }
+            DiamondY1info = new THREE.Mesh( geometry, material );
+            DiamondY1info.position.copy(DiamondY1.position);    
+            DiamondY1info.lookAt( camera.position );
+		DiamondY1info.renderOrder = 2;
+            scene.add( DiamondY1info );
+            this.Y1.from(DiamondY1people.scale, 0.5 , { x:0 , y:0 , z:0 , ease: Back.easeOut.config(1.4)},"-=0.25");
+            this.Y1.from(DiamondY1info.scale, 0.5 , { x:0 , y:0 , z:0 , ease: Back.easeOut.config(1.4)},"-=0.35");
+            this.Y1.to(DiamondY1people.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},6);
+            this.Y1.to(DiamondY1info.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},6.15);
+            EndGameCountDown();
+        }
+         if(DName == "O1"){
+            this.O1 = new TimelineMax();
+            DiamondO1cube = scene.getObjectByName("DiamondO1cube"); 
+            this.O1.to(DiamondO1cube.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut});
+            //定義寶石名稱
+            DiamondO1 = scene.getObjectByName("DiamondO1"); 
+            this.O1.to(DiamondO1.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},"-=0.5");
+            var geometry = new THREE.PlaneGeometry( 17.16 , 27.48 );//19.07 , 30.53
+            var material = new THREE.MeshBasicMaterial( { map: O1texture ,transparent: true, opacity: 0.95 } );
+            DiamondO1people = new THREE.Mesh( geometry, material );
+            DiamondO1people.position.copy(DiamondO1.position);       
+            DiamondO1people.lookAt( camera.position );
+		 DiamondO1people.renderOrder = 1;
+            scene.add( DiamondO1people );
+            var geometry = new THREE.PlaneGeometry( 75,75 );
+            if( Language == "Chinese"){
+                var material = new THREE.MeshBasicMaterial( { map: O1infotexture ,transparent: true, opacity: 0.95 } );
+            }else if(Language == "English"){
+                var material = new THREE.MeshBasicMaterial( { map: O1info2texture ,transparent: true, opacity: 0.95 } );
+            }
+            DiamondO1info = new THREE.Mesh( geometry, material );
+            DiamondO1info.position.copy (DiamondO1.position);
+            DiamondO1info.lookAt( camera.position );
+		 DiamondO1info.renderOrder = 2;
+            scene.add( DiamondO1info );
+            this.O1.from(DiamondO1people.scale, 0.5 , { x:0 , y:0 , z:0 , ease: Back.easeOut.config(1.4)},"-=0.25");
+            this.O1.from(DiamondO1info.scale, 0.5 , { x:0 , y:0 , z:0 , ease: Back.easeOut.config(1.4)},"-=0.35");
+            this.O1.to(DiamondO1people.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},6);
+            this.O1.to(DiamondO1info.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},6.15);
+        }
+	if(DName == "O2"){
+            this.O2 = new TimelineMax();
+            DiamondO2cube = scene.getObjectByName("DiamondO2cube"); 
+            this.O2.to(DiamondO2cube.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut});
+            //定義寶石名稱
+            DiamondO2 = scene.getObjectByName("DiamondO2"); 
+            this.O2.to(DiamondO2.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},"-=0.5");
+            var geometry = new THREE.PlaneGeometry( 17.16 , 27.48 );//19.07 , 30.53
+            var material = new THREE.MeshBasicMaterial( { map: O1texture ,transparent: true, opacity: 0.95 } );
+            DiamondO2people = new THREE.Mesh( geometry, material );
+            DiamondO2people.position.copy(DiamondO2.position);       
+            DiamondO2people.lookAt( camera.position );
+	    DiamondO2people.renderOrder = 1;
+            scene.add( DiamondO2people );
+            var geometry = new THREE.PlaneGeometry( 75,75 );
+            if( Language == "Chinese"){
+                var material = new THREE.MeshBasicMaterial( { map: O1infotexture ,transparent: true, opacity: 0.95 } );
+            }else if(Language == "English"){
+                var material = new THREE.MeshBasicMaterial( { map: O1info2texture ,transparent: true, opacity: 0.95 } );
+            }
+            DiamondO2info = new THREE.Mesh( geometry, material );
+            DiamondO2info.position.copy (DiamondO2.position);
+            DiamondO2info.lookAt( camera.position );
+		 DiamondO2info.renderOrder = 2;
+            scene.add( DiamondO2info );
+            this.O2.from(DiamondO2people.scale, 0.5 , { x:0 , y:0 , z:0 , ease: Back.easeOut.config(1.4)},"-=0.25");
+            this.O2.from(DiamondO2info.scale, 0.5 , { x:0 , y:0 , z:0 , ease: Back.easeOut.config(1.4)},"-=0.35");
+            this.O2.to(DiamondO2people.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},6);
+            this.O2.to(DiamondO2info.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},6.15);
+        }
+        if(DName == "R1W"){
+            this.R1W = new TimelineMax();
+            DiamondR1Wcube = scene.getObjectByName("DiamondR1Wcube"); 
+            this.R1W.to(DiamondR1Wcube.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut});
+            //定義寶石名稱
+            DiamondR1W = scene.getObjectByName("DiamondR1W"); 
+            this.R1W.to(DiamondR1W.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},"-=0.5");
+            
+            var geometry = new THREE.PlaneGeometry( 75,75 );
+            if( Language == "Chinese"){
+                var material = new THREE.MeshBasicMaterial( { map: R1Wtexture ,transparent: true, opacity: 0.95 } );
+            }else if(Language == "English"){
+                var material = new THREE.MeshBasicMaterial( { map: R1W2texture ,transparent: true, opacity: 0.95 } );
+            }
+            DiamondR1Winfo = new THREE.Mesh( geometry, material );
+            DiamondR1Winfo.position.copy(DiamondR1W.position);         
+            DiamondR1Winfo.lookAt( camera.position );
+            scene.add( DiamondR1Winfo );
+            this.R1W.from(DiamondR1Winfo.scale, 0.5 , { x:0 , y:0 , z:0 , ease: Back.easeOut.config(1.4)},"-=0.35");
+            this.R1W.to(DiamondR1Winfo.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},5);
+        }
+        if(DName == "G1W"){
+            this.G1W = new TimelineMax();
+            DiamondG1Wcube = scene.getObjectByName("DiamondG1Wcube"); 
+            this.G1W.to(DiamondG1Wcube.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut});
+            //定義寶石名稱
+            DiamondG1W = scene.getObjectByName("DiamondG1W"); 
+            this.G1W.to(DiamondG1W.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},"-=0.5");
+            var geometry = new THREE.PlaneGeometry( 75,75 );
+            if( Language == "Chinese"){
+                var material = new THREE.MeshBasicMaterial( { map: G1Wtexture ,transparent: true, opacity: 0.95 } );
+            }else if(Language == "English"){
+                var material = new THREE.MeshBasicMaterial( { map: G1W2texture ,transparent: true, opacity: 0.95 } );
+            }
+		material.minFilter = THREE.LinearMipMapLinearFilter ;
+            DiamondG1Winfo = new THREE.Mesh( geometry, material );
+            DiamondG1Winfo.position.copy(DiamondG1W.position);         
+            DiamondG1Winfo.lookAt( camera.position );
+            scene.add( DiamondG1Winfo );
+            this.G1W.from(DiamondG1Winfo.scale, 0.5 , { x:0 , y:0 , z:0 , ease: Back.easeOut.config(1.4)},"-=0.35");
+            this.G1W.to(DiamondG1Winfo.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},5);
+        }
+        if(DName == "B1W"){
+            this.B1W = new TimelineMax();
+            DiamondB1Wcube = scene.getObjectByName("DiamondB1Wcube"); 
+            this.B1W.to(DiamondB1Wcube.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut});
+            //定義寶石名稱
+            DiamondB1W = scene.getObjectByName("DiamondB1W"); 
+            this.B1W.to(DiamondB1W.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},"-=0.5");
+            var geometry = new THREE.PlaneGeometry( 75,75 );
+            if( Language == "Chinese"){
+                var material = new THREE.MeshBasicMaterial( { map: B1Wtexture ,transparent: true, opacity: 0.95 } );
+            }else if(Language == "English"){
+                var material = new THREE.MeshBasicMaterial( { map: B1W2texture ,transparent: true, opacity: 0.95 } );
+            }
+		material.minFilter = THREE.LinearMipMapLinearFilter ;
+            DiamondB1Winfo = new THREE.Mesh( geometry, material );
+            DiamondB1Winfo.position.copy(DiamondB1W.position);         
+            DiamondB1Winfo.lookAt( camera.position );
+            scene.add( DiamondB1Winfo );
+            this.B1W.from(DiamondB1Winfo.scale, 0.5 , { x:0 , y:0 , z:0 , ease: Back.easeOut.config(1.4)},"-=0.35");
+            this.B1W.to(DiamondB1Winfo.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},5);
+        }
+        if(DName == "P1W"){
+            this.P1W = new TimelineMax();
+            DiamondP1Wcube = scene.getObjectByName("DiamondP1Wcube"); 
+            this.P1W.to(DiamondP1Wcube.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut});
+            //定義寶石名稱
+            DiamondP1W = scene.getObjectByName("DiamondP1W"); 
+            this.P1W.to(DiamondP1W.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},"-=0.5");
+            var geometry = new THREE.PlaneGeometry( 75,75 );
+            if( Language == "Chinese"){
+                var material = new THREE.MeshBasicMaterial( { map: P1Wtexture ,transparent: true, opacity: 0.95 } );
+            }else if(Language == "English"){
+                var material = new THREE.MeshBasicMaterial( { map: P1W2texture ,transparent: true, opacity: 0.95 } );
+            }
+		material.minFilter = THREE.LinearMipMapLinearFilter ;
+            DiamondP1Winfo = new THREE.Mesh( geometry, material );
+            DiamondP1Winfo.position.copy(DiamondP1W.position);         
+            DiamondP1Winfo.lookAt( camera.position );
+            scene.add( DiamondP1Winfo );
+            this.P1W.from(DiamondP1Winfo.scale, 0.5 , { x:0 , y:0 , z:0 , ease: Back.easeOut.config(1.4)},"-=0.35");
+            this.P1W.to(DiamondP1Winfo.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},5);
+        }
+        if(DName == "Y1W"){
+            this.Y1W = new TimelineMax();
+            DiamondY1Wcube = scene.getObjectByName("DiamondY1Wcube"); 
+            this.Y1W.to(DiamondY1Wcube.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut});
+            //定義寶石名稱
+            DiamondY1W = scene.getObjectByName("DiamondY1W"); 
+            this.Y1W.to(DiamondY1W.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},"-=0.5");
+            var geometry = new THREE.PlaneGeometry( 75,75 );
+            if( Language == "Chinese"){
+                var material = new THREE.MeshBasicMaterial( { map: Y1Wtexture ,transparent: true, opacity: 0.95 } );
+            }else if(Language == "English"){
+                var material = new THREE.MeshBasicMaterial( { map: Y1W2texture ,transparent: true, opacity: 0.95 } );
+            }
+		material.minFilter = THREE.LinearMipMapLinearFilter ;
+            DiamondY1Winfo = new THREE.Mesh( geometry, material );
+            DiamondY1Winfo.position.copy(DiamondY1W.position);         
+            DiamondY1Winfo.lookAt( camera.position );
+            scene.add( DiamondY1Winfo );
+            this.Y1W.from(DiamondY1Winfo.scale, 0.5 , { x:0 , y:0 , z:0 ,ease: Back.easeOut.config(1.4)},"-=0.35");
+            this.Y1W.to(DiamondY1Winfo.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},5);
+        }
+	if(DName == "M1"){
+            this.M1 = new TimelineMax();
+            DiamondM1cube = scene.getObjectByName("DiamondM1cube"); 
+            this.M1.to(DiamondM1cube.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut});
+            //定義寶石名稱
+            DiamondM1 = scene.getObjectByName("DiamondM1"); 
+            this.M1.to(DiamondM1.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},"-=0.5");
+            var geometry = new THREE.PlaneGeometry( 75,75 );
+            if( Language == "Chinese"){
+                var material = new THREE.MeshBasicMaterial( { map: Wrongtexture ,transparent: true, opacity: 0.95 } );
+            }else if(Language == "English"){
+                var material = new THREE.MeshBasicMaterial( { map: Wrong2texture ,transparent: true, opacity: 0.95 } );
+            }
+		material.minFilter = THREE.LinearMipMapLinearFilter ;
+            DiamondM1info = new THREE.Mesh( geometry, material );
+            DiamondM1info.position.copy(DiamondM1.position);         
+            DiamondM1info.lookAt( camera.position );
+            scene.add( DiamondM1info );
+            this.M1.from(DiamondM1info.scale, 0.5 , { x:0 , y:0 , z:0 , ease: Back.easeOut.config(1.4)},"-=0.35");
+            this.M1.to(DiamondM1info.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},5);
+        }
+	if(DName == "M2"){
+            this.M2 = new TimelineMax();
+            DiamondM2cube = scene.getObjectByName("DiamondM2cube"); 
+            this.M2.to(DiamondM2cube.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut});
+            //定義寶石名稱
+            DiamondM2 = scene.getObjectByName("DiamondM2"); 
+            this.M2.to(DiamondM2.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},"-=0.5");
+            var geometry = new THREE.PlaneGeometry( 75,75 );
+            if( Language == "Chinese"){
+                var material = new THREE.MeshBasicMaterial( { map: Wrongtexture ,transparent: true, opacity: 0.95 } );
+            }else if(Language == "English"){
+                var material = new THREE.MeshBasicMaterial( { map: Wrong2texture ,transparent: true, opacity: 0.95 } );
+            }
+		material.minFilter = THREE.LinearMipMapLinearFilter ;
+            DiamondM2info = new THREE.Mesh( geometry, material );
+            DiamondM2info.position.copy(DiamondM2.position);         
+            DiamondM2info.lookAt( camera.position );
+            scene.add( DiamondM2info );
+            this.M2.from(DiamondM2info.scale, 0.5 , { x:0 , y:0 , z:0 , ease: Back.easeOut.config(1.4)},"-=0.35");
+            this.M2.to(DiamondM2info.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},5);
+        }
+	if(DName == "M3"){
+            this.M3 = new TimelineMax();
+            DiamondM3cube = scene.getObjectByName("DiamondM3cube"); 
+            this.M3.to(DiamondM3cube.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut});
+            //定義寶石名稱
+            DiamondM3 = scene.getObjectByName("DiamondM3"); 
+            this.M3.to(DiamondM3.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},"-=0.5");
+            var geometry = new THREE.PlaneGeometry( 75,75 );
+            if( Language == "Chinese"){
+                var material = new THREE.MeshBasicMaterial( { map: Wrongtexture ,transparent: true, opacity: 0.95 } );
+            }else if(Language == "English"){
+                var material = new THREE.MeshBasicMaterial( { map: Wrong2texture ,transparent: true, opacity: 0.95 } );
+            }
+		material.minFilter = THREE.LinearMipMapLinearFilter ;
+            DiamondM3info = new THREE.Mesh( geometry, material );
+            DiamondM3info.position.copy(DiamondM3.position);         
+            DiamondM3info.lookAt( camera.position );
+            scene.add( DiamondM3info );
+            this.M3.from(DiamondM3info.scale, 0.5 , { x:0 , y:0 , z:0 , ease: Back.easeOut.config(1.4)},"-=0.35");
+            this.M3.to(DiamondM3info.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},5);
+        }
+	if(DName == "M4"){
+            this.M4 = new TimelineMax();
+            DiamondM4cube = scene.getObjectByName("DiamondM4cube"); 
+            this.M4.to(DiamondM4cube.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut});
+            //定義寶石名稱
+            DiamondM4 = scene.getObjectByName("DiamondM4"); 
+            this.M4.to(DiamondM4.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},"-=0.5");
+            var geometry = new THREE.PlaneGeometry( 75,75 );
+            if( Language == "Chinese"){
+                var material = new THREE.MeshBasicMaterial( { map: Wrongtexture ,transparent: true, opacity: 0.95 } );
+            }else if(Language == "English"){
+                var material = new THREE.MeshBasicMaterial( { map: Wrong2texture ,transparent: true, opacity: 0.95 } );
+            }
+		material.minFilter = THREE.LinearMipMapLinearFilter ;
+            DiamondM4info = new THREE.Mesh( geometry, material );
+            DiamondM4info.position.copy(DiamondM4.position);         
+            DiamondM4info.lookAt( camera.position );
+            scene.add( DiamondM4info );
+            this.M4.from(DiamondM4info.scale, 0.5 , { x:0 , y:0 , z:0 , ease: Back.easeOut.config(1.4)},"-=0.35");
+            this.M4.to(DiamondM4info.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},5);
+        }
+	if(DName == "M5"){
+            this.M5 = new TimelineMax();
+            DiamondM5cube = scene.getObjectByName("DiamondM5cube"); 
+            this.M5.to(DiamondM5cube.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut});
+            //定義寶石名稱
+            DiamondM5 = scene.getObjectByName("DiamondM5"); 
+            this.M5.to(DiamondM5.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},"-=0.5");
+            var geometry = new THREE.PlaneGeometry( 75,75 );
+            if( Language == "Chinese"){
+                var material = new THREE.MeshBasicMaterial( { map: Wrongtexture ,transparent: true, opacity: 0.95 } );
+            }else if(Language == "English"){
+                var material = new THREE.MeshBasicMaterial( { map: Wrong2texture ,transparent: true, opacity: 0.95 } );
+            }
+		material.minFilter = THREE.LinearMipMapLinearFilter ;
+            DiamondM5info = new THREE.Mesh( geometry, material );
+            DiamondM5info.position.copy(DiamondM5.position);         
+            DiamondM5info.lookAt( camera.position );
+            scene.add( DiamondM5info );
+            this.M5.from(DiamondM5info.scale, 0.5 , { x:0 , y:0 , z:0 , ease: Back.easeOut.config(1.4)},"-=0.35");
+            this.M5.to(DiamondM5info.scale, 0.5 , { x:0 , y:0 , z:0 , ease:Expo.easeOut},5);
+        }
+    }
+    
+    function EndGameCountDown(){
+        CountNumber++;
+	var leftNumber = 5 - CountNumber;
+	if(CountNumber < 5){
+	    if( Language == "Chinese" ){
+		document.getElementById("Collecttext").innerHTML = "還有" + leftNumber +"個寶石待收集";
+	    }if( Language == "English" ){
+	    	document.getElementById("Collecttext").innerHTML = leftNumber +" stones left to be collected";
+	    }
+	}
+        //document.getElementById("Counting").innerHTML = CountNumber;
+        if(CountNumber >= 5){
+            controls.enable = false;
+	if( Language == "Chinese" ){
+	    document.getElementById("Collecttext").innerHTML = "恭喜完成寶石收集，請稍待片刻";
+	}if( Language == "English" ){
+	    document.getElementById("Collecttext").innerHTML = "You’ve gotten all the stones, please wait";
+	}
+            var EndGameAnim = new TimelineLite();
+            EndGameAnim.to("#EndingGame", 0.5 , { y:0,opacity:1 ,onComplete: function() {
+	    TweenMax.to("#Collecttext", 0.5 , { y:0,opacity:0});
+            document.getElementById("Background").style.display = "block";
+            TweenMax.to("#Background", 0.5 , { y:0,opacity:1});
+            document.getElementById("EndingGame").style.display = "block";
+            renderer.domElement.style.top = '1000px';
+            }},5.5);
+         }    
+     }
+    function EndGameLink(){
+	if( Language == "Chinese" && Endlink == false){
+	    document.getElementById("EndingButton").onclick = location.href='https://docs.google.com/forms/d/e/1FAIpQLSdxtW7MF_gqMoaNzTzaWeu0XBi-DIE4NG3AZ3Bs7rIJ1kZ3ew/viewform';
+        }if( Language == "English"  && Endlink == false){
+	    //document.getElementById("EndingButton").onclick = location.href='https://docs.google.com/forms/d/e/1FAIpQLSfm7-JUeIV-QGzwXEv0ZvjFN09UdyjlFZnKP-D5isRNxr34TA/viewform';
+ 	    document.getElementById("EndingButton").onclick = location.href='https://ding.fanqier.cn/f/82izyhke';
+
+	}
+	    Endlink = true;
+     }
+	
+	
+        </script>
+    </body>
+</html>
