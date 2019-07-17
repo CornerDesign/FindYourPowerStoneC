@@ -481,7 +481,7 @@
         object.name = MeshName;     
         object.position.set(x,y,z);
 	TweenMax.to(object.rotation,600 , {y:360,x:0,z:0 , ease: Power0.easeNone , repeat:-1} );
-        console.log("Name"+object.name +"Color"+ ModelColor + "object.position"+object.position.y);
+        /*console.log("Name"+object.name +"Color"+ ModelColor + "object.position"+object.position.y);*/
         });
         var cubegeometry = new THREE.BoxGeometry( 15 , 15 , 15 );
         var cubematerial = new THREE.MeshBasicMaterial( {  color: 0xFFF000,  transparent : true,  opacity:0 });
@@ -490,7 +490,7 @@
 	cubemesh.lookAt( camera.position );
         scene.add( cubemesh );
         cubemesh.name = MeshName+"cube";
-        console.log("cubeName"+cubemesh.name);
+        /*console.log("cubeName"+cubemesh.name);*/
     }
 
 
