@@ -136,7 +136,7 @@
         </div>
         
         <div id="Main">
-            <button class ="mybtn clickmybtn" onclick="LanguageFunction(1)"> 繁體中文 </button>
+            <button class ="mybtn clickmybtn" onclick="LanguageFunction(1)"> 进入游戏 </button>
         </div>
         <div id="Loading">
 	<img id = "Rolling" src="textures/Rolling.png" alt="Rolling" width="50" > <br/>
@@ -146,11 +146,11 @@
 	</div>
         <div id="Tutorial">
             <img id = "tutorialimg " src="textures/phoneturn.png" alt="tutorial" width="100" > <br/>
-            <h3 id = "tutorialtext">旋轉手機尋找能力寶石</h3>
+            <h3 id = "tutorialtext">旋转手机寻找能力宝石</h3>
         </div>
         
 	<div id="EndingGame">
-            <input class="mybtn clickmybtn" id = "EndingButton" type="button" onclick="EndGameLink()" value="來去抽獎" />
+            <input class="mybtn clickmybtn" id = "EndingButton" type="button" onclick="EndGameLink()" value="来去抽奖" />
         </div>
        
         <div id="Debug">
@@ -192,20 +192,12 @@
         Tutorial.style.display = "block";
         if(language == 1){
             Language = "Chinese";
-            document.getElementById("tutorialtext").innerHTML = "旋轉手機尋找能力寶石" ;
-	    document.getElementById("EndingButton").value = "來去抽獎";
+            document.getElementById("tutorialtext").innerHTML = "旋转手机寻找能力宝石" ;
+	    document.getElementById("EndingButton").value = "来去抽奖";
 	    CountingCollect.style.display = "block";
-	    document.getElementById("Collecttext").innerHTML = "還有5個寶石待收集";
+	    document.getElementById("Collecttext").innerHTML = "还有5个宝石待收集";
 	    TweenMax.from("#CountingCollect", 0.5 , { y:-5,opacity:0 ,delay:1.25} );
             console.log("chinese");
-        }if(language == 2){
-            Language = "English";
-            document.getElementById("tutorialtext").innerHTML = "Turn your Phone to find power stone" ;
-	    document.getElementById("EndingButton").value = "Get the prize";
-	    CountingCollect.style.display = "block";
-	    document.getElementById("Collecttext").innerHTML = "5 stones left to be collected";
-	    TweenMax.from("#CountingCollect", 0.5 , { y:-5,opacity:0 ,delay:1.25} );
-            console.log("English");
         }
         StartGamefunction();
     }
@@ -443,35 +435,23 @@
     	//對的
     	R1texture = textureLoader.load( 'textures/redpeople.png' );       
     	R1infotexture = textureLoader.load( 'textures/info/new1/redinfo.png' );
-    	R1info2texture = textureLoader.load( 'textures/info/new1/redinfo2.png' );
     	G1texture = textureLoader.load( 'textures/greenpeople.png' );       
     	G1infotexture = textureLoader.load( 'textures/info/new1/greeninfo.png' );
-    	G1info2texture = textureLoader.load( 'textures/info/new1/greeninfo2.png' );
     	B1texture = textureLoader.load( 'textures/bluepeople.png' );       
     	B1infotexture = textureLoader.load( 'textures/info/new1/blueinfo.png' );
-    	B1info2texture = textureLoader.load( 'textures/info/new1/blueinfo2.png' );
     	P1texture = textureLoader.load( 'textures/purplepeople.png' );       
     	P1infotexture = textureLoader.load( 'textures/info/new1/purpleinfo.png' );
-    	P1info2texture = textureLoader.load( 'textures/info/new1/purpleinfo2.png' );
     	Y1texture = textureLoader.load( 'textures/yellowpeople.png' );       
     	Y1infotexture = textureLoader.load( 'textures/info/new1/yellowinfo.png' );
-   	Y1info2texture = textureLoader.load( 'textures/info/new1/yellowinfo2.png' );
     	O1texture = textureLoader.load( 'textures/orangepeople.png' );       
     	O1infotexture = textureLoader.load( 'textures/info/new1/orangeinfo.png' );
-    	O1info2texture = textureLoader.load( 'textures/info/new1/orangeinfo2.png' );
     	//錯的
     	R1Wtexture = textureLoader.load( 'textures/wronganswer/new1/redwrong.png' );
-    	R1W2texture = textureLoader.load( 'textures/wronganswer/new1/redwrong2.png' );
     	G1Wtexture = textureLoader.load( 'textures/wronganswer/new1/greenwrong.png' );
-    	G1W2texture = textureLoader.load( 'textures/wronganswer/new1/greenwrong2.png' );
     	B1Wtexture = textureLoader.load( 'textures/wronganswer/new1/bluewrong.png' );
-    	B1W2texture = textureLoader.load( 'textures/wronganswer/new1/bluewrong2.png' );
     	P1Wtexture = textureLoader.load( 'textures/wronganswer/new1/purplewrong.png' );
-    	P1W2texture = textureLoader.load( 'textures/wronganswer/new1/purplewrong2.png' );
     	Y1Wtexture = textureLoader.load( 'textures/wronganswer/new1/yellowwrong.png' );
-    	Y1W2texture = textureLoader.load( 'textures/wronganswer/new1/yellowwrong2.png' );
     	Wrongtexture = textureLoader.load( 'textures/wronganswer/new1/wrong.png' );
-    	Wrong2texture = textureLoader.load( 'textures/wronganswer/new1/wrong2.png' );
 	    
 	//星球
 	Pl0texture = textureLoader.load( 'textures/planet/planet0.png' );
@@ -544,8 +524,6 @@
             var geometry = new THREE.PlaneGeometry( 75,75 );
             if( Language == "Chinese"){
                 var material = new THREE.MeshBasicMaterial( { map: R1infotexture ,transparent: true, opacity: 0.95 } );
-            }else if(Language == "English"){
-                var material = new THREE.MeshBasicMaterial( { map: R1info2texture ,transparent: true, opacity: 0.95 } );
             }
             DiamondR1info = new THREE.Mesh( geometry, material );
             DiamondR1info.position.copy(DiamondR1.position);         
@@ -575,8 +553,6 @@
             var geometry = new THREE.PlaneGeometry( 75,75 );
             if( Language == "Chinese"){
                 var material = new THREE.MeshBasicMaterial( { map: G1infotexture ,transparent: true, opacity: 0.95 } );
-            }else if(Language == "English"){
-                var material = new THREE.MeshBasicMaterial( { map: G1info2texture ,transparent: true, opacity: 0.95 } );
             }
             DiamondG1info = new THREE.Mesh( geometry, material );
             DiamondG1info.position.copy(DiamondG1.position);    
@@ -606,8 +582,6 @@
             var geometry = new THREE.PlaneGeometry( 75,75 );
             if( Language == "Chinese"){
                 var material = new THREE.MeshBasicMaterial( { map: B1infotexture ,transparent: true, opacity: 0.95 } );
-            }else if(Language == "English"){
-                var material = new THREE.MeshBasicMaterial( { map: B1info2texture ,transparent: true, opacity: 0.95 } );
             }
             DiamondB1info = new THREE.Mesh( geometry, material );
             DiamondB1info.position.copy(DiamondB1.position);         
@@ -637,13 +611,11 @@
             var geometry = new THREE.PlaneGeometry( 75,75 );
             if( Language == "Chinese"){
                 var material = new THREE.MeshBasicMaterial( { map: P1infotexture ,transparent: true, opacity: 0.95 } );
-            }else if(Language == "English"){
-                var material = new THREE.MeshBasicMaterial( { map: P1info2texture ,transparent: true, opacity: 0.95 } );
             }
             DiamondP1info = new THREE.Mesh( geometry, material );
             DiamondP1info.position.copy(DiamondP1.position);       
             DiamondP1info.lookAt( camera.position );
-		DiamondP1info.renderOrder = 2;
+	    DiamondP1info.renderOrder = 2;
             scene.add( DiamondP1info );
             this.P1.from(DiamondP1people.scale, 0.5 , { x:0 , y:0 , z:0 , ease: Back.easeOut.config(1.4)},"-=0.25");
             this.P1.from(DiamondP1info.scale, 0.5 , { x:0 , y:0 , z:0 , ease: Back.easeOut.config(1.4)},"-=0.35");
@@ -668,8 +640,6 @@
             var geometry = new THREE.PlaneGeometry( 75,75 );
             if( Language == "Chinese"){
                 var material = new THREE.MeshBasicMaterial( { map: Y1infotexture ,transparent: true, opacity: 0.95 } );
-            }else if(Language == "English"){
-                var material = new THREE.MeshBasicMaterial( { map: Y1info2texture ,transparent: true, opacity: 0.95 } );
             }
             DiamondY1info = new THREE.Mesh( geometry, material );
             DiamondY1info.position.copy(DiamondY1.position);    
@@ -699,13 +669,11 @@
             var geometry = new THREE.PlaneGeometry( 75,75 );
             if( Language == "Chinese"){
                 var material = new THREE.MeshBasicMaterial( { map: O1infotexture ,transparent: true, opacity: 0.95 } );
-            }else if(Language == "English"){
-                var material = new THREE.MeshBasicMaterial( { map: O1info2texture ,transparent: true, opacity: 0.95 } );
             }
             DiamondO1info = new THREE.Mesh( geometry, material );
             DiamondO1info.position.copy (DiamondO1.position);
             DiamondO1info.lookAt( camera.position );
-		 DiamondO1info.renderOrder = 2;
+	    DiamondO1info.renderOrder = 2;
             scene.add( DiamondO1info );
             this.O1.from(DiamondO1people.scale, 0.5 , { x:0 , y:0 , z:0 , ease: Back.easeOut.config(1.4)},"-=0.25");
             this.O1.from(DiamondO1info.scale, 0.5 , { x:0 , y:0 , z:0 , ease: Back.easeOut.config(1.4)},"-=0.35");
@@ -729,13 +697,11 @@
             var geometry = new THREE.PlaneGeometry( 75,75 );
             if( Language == "Chinese"){
                 var material = new THREE.MeshBasicMaterial( { map: O1infotexture ,transparent: true, opacity: 0.95 } );
-            }else if(Language == "English"){
-                var material = new THREE.MeshBasicMaterial( { map: O1info2texture ,transparent: true, opacity: 0.95 } );
             }
             DiamondO2info = new THREE.Mesh( geometry, material );
             DiamondO2info.position.copy (DiamondO2.position);
             DiamondO2info.lookAt( camera.position );
-		 DiamondO2info.renderOrder = 2;
+	    DiamondO2info.renderOrder = 2;
             scene.add( DiamondO2info );
             this.O2.from(DiamondO2people.scale, 0.5 , { x:0 , y:0 , z:0 , ease: Back.easeOut.config(1.4)},"-=0.25");
             this.O2.from(DiamondO2info.scale, 0.5 , { x:0 , y:0 , z:0 , ease: Back.easeOut.config(1.4)},"-=0.35");
@@ -753,8 +719,6 @@
             var geometry = new THREE.PlaneGeometry( 75,75 );
             if( Language == "Chinese"){
                 var material = new THREE.MeshBasicMaterial( { map: R1Wtexture ,transparent: true, opacity: 0.95 } );
-            }else if(Language == "English"){
-                var material = new THREE.MeshBasicMaterial( { map: R1W2texture ,transparent: true, opacity: 0.95 } );
             }
             DiamondR1Winfo = new THREE.Mesh( geometry, material );
             DiamondR1Winfo.position.copy(DiamondR1W.position);         
@@ -773,10 +737,8 @@
             var geometry = new THREE.PlaneGeometry( 75,75 );
             if( Language == "Chinese"){
                 var material = new THREE.MeshBasicMaterial( { map: G1Wtexture ,transparent: true, opacity: 0.95 } );
-            }else if(Language == "English"){
-                var material = new THREE.MeshBasicMaterial( { map: G1W2texture ,transparent: true, opacity: 0.95 } );
             }
-		material.minFilter = THREE.LinearMipMapLinearFilter ;
+	    material.minFilter = THREE.LinearMipMapLinearFilter ;
             DiamondG1Winfo = new THREE.Mesh( geometry, material );
             DiamondG1Winfo.position.copy(DiamondG1W.position);         
             DiamondG1Winfo.lookAt( camera.position );
@@ -794,10 +756,8 @@
             var geometry = new THREE.PlaneGeometry( 75,75 );
             if( Language == "Chinese"){
                 var material = new THREE.MeshBasicMaterial( { map: B1Wtexture ,transparent: true, opacity: 0.95 } );
-            }else if(Language == "English"){
-                var material = new THREE.MeshBasicMaterial( { map: B1W2texture ,transparent: true, opacity: 0.95 } );
             }
-		material.minFilter = THREE.LinearMipMapLinearFilter ;
+	    material.minFilter = THREE.LinearMipMapLinearFilter ;
             DiamondB1Winfo = new THREE.Mesh( geometry, material );
             DiamondB1Winfo.position.copy(DiamondB1W.position);         
             DiamondB1Winfo.lookAt( camera.position );
@@ -815,10 +775,8 @@
             var geometry = new THREE.PlaneGeometry( 75,75 );
             if( Language == "Chinese"){
                 var material = new THREE.MeshBasicMaterial( { map: P1Wtexture ,transparent: true, opacity: 0.95 } );
-            }else if(Language == "English"){
-                var material = new THREE.MeshBasicMaterial( { map: P1W2texture ,transparent: true, opacity: 0.95 } );
             }
-		material.minFilter = THREE.LinearMipMapLinearFilter ;
+	    material.minFilter = THREE.LinearMipMapLinearFilter ;
             DiamondP1Winfo = new THREE.Mesh( geometry, material );
             DiamondP1Winfo.position.copy(DiamondP1W.position);         
             DiamondP1Winfo.lookAt( camera.position );
@@ -836,10 +794,8 @@
             var geometry = new THREE.PlaneGeometry( 75,75 );
             if( Language == "Chinese"){
                 var material = new THREE.MeshBasicMaterial( { map: Y1Wtexture ,transparent: true, opacity: 0.95 } );
-            }else if(Language == "English"){
-                var material = new THREE.MeshBasicMaterial( { map: Y1W2texture ,transparent: true, opacity: 0.95 } );
             }
-		material.minFilter = THREE.LinearMipMapLinearFilter ;
+	    material.minFilter = THREE.LinearMipMapLinearFilter ;
             DiamondY1Winfo = new THREE.Mesh( geometry, material );
             DiamondY1Winfo.position.copy(DiamondY1W.position);         
             DiamondY1Winfo.lookAt( camera.position );
@@ -857,10 +813,8 @@
             var geometry = new THREE.PlaneGeometry( 75,75 );
             if( Language == "Chinese"){
                 var material = new THREE.MeshBasicMaterial( { map: Wrongtexture ,transparent: true, opacity: 0.95 } );
-            }else if(Language == "English"){
-                var material = new THREE.MeshBasicMaterial( { map: Wrong2texture ,transparent: true, opacity: 0.95 } );
             }
-		material.minFilter = THREE.LinearMipMapLinearFilter ;
+	    material.minFilter = THREE.LinearMipMapLinearFilter ;
             DiamondM1info = new THREE.Mesh( geometry, material );
             DiamondM1info.position.copy(DiamondM1.position);         
             DiamondM1info.lookAt( camera.position );
@@ -878,10 +832,8 @@
             var geometry = new THREE.PlaneGeometry( 75,75 );
             if( Language == "Chinese"){
                 var material = new THREE.MeshBasicMaterial( { map: Wrongtexture ,transparent: true, opacity: 0.95 } );
-            }else if(Language == "English"){
-                var material = new THREE.MeshBasicMaterial( { map: Wrong2texture ,transparent: true, opacity: 0.95 } );
             }
-		material.minFilter = THREE.LinearMipMapLinearFilter ;
+	    material.minFilter = THREE.LinearMipMapLinearFilter ;
             DiamondM2info = new THREE.Mesh( geometry, material );
             DiamondM2info.position.copy(DiamondM2.position);         
             DiamondM2info.lookAt( camera.position );
@@ -899,10 +851,8 @@
             var geometry = new THREE.PlaneGeometry( 75,75 );
             if( Language == "Chinese"){
                 var material = new THREE.MeshBasicMaterial( { map: Wrongtexture ,transparent: true, opacity: 0.95 } );
-            }else if(Language == "English"){
-                var material = new THREE.MeshBasicMaterial( { map: Wrong2texture ,transparent: true, opacity: 0.95 } );
             }
-		material.minFilter = THREE.LinearMipMapLinearFilter ;
+	    material.minFilter = THREE.LinearMipMapLinearFilter ;
             DiamondM3info = new THREE.Mesh( geometry, material );
             DiamondM3info.position.copy(DiamondM3.position);         
             DiamondM3info.lookAt( camera.position );
@@ -920,10 +870,8 @@
             var geometry = new THREE.PlaneGeometry( 75,75 );
             if( Language == "Chinese"){
                 var material = new THREE.MeshBasicMaterial( { map: Wrongtexture ,transparent: true, opacity: 0.95 } );
-            }else if(Language == "English"){
-                var material = new THREE.MeshBasicMaterial( { map: Wrong2texture ,transparent: true, opacity: 0.95 } );
             }
-		material.minFilter = THREE.LinearMipMapLinearFilter ;
+	    material.minFilter = THREE.LinearMipMapLinearFilter ;
             DiamondM4info = new THREE.Mesh( geometry, material );
             DiamondM4info.position.copy(DiamondM4.position);         
             DiamondM4info.lookAt( camera.position );
@@ -941,10 +889,8 @@
             var geometry = new THREE.PlaneGeometry( 75,75 );
             if( Language == "Chinese"){
                 var material = new THREE.MeshBasicMaterial( { map: Wrongtexture ,transparent: true, opacity: 0.95 } );
-            }else if(Language == "English"){
-                var material = new THREE.MeshBasicMaterial( { map: Wrong2texture ,transparent: true, opacity: 0.95 } );
             }
-		material.minFilter = THREE.LinearMipMapLinearFilter ;
+	    material.minFilter = THREE.LinearMipMapLinearFilter ;
             DiamondM5info = new THREE.Mesh( geometry, material );
             DiamondM5info.position.copy(DiamondM5.position);         
             DiamondM5info.lookAt( camera.position );
@@ -959,18 +905,14 @@
 	var leftNumber = 5 - CountNumber;
 	if(CountNumber < 5){
 	    if( Language == "Chinese" ){
-		document.getElementById("Collecttext").innerHTML = "還有" + leftNumber +"個寶石待收集";
-	    }if( Language == "English" ){
-	    	document.getElementById("Collecttext").innerHTML = leftNumber +" stones left to be collected";
+		document.getElementById("Collecttext").innerHTML = "还有" + leftNumber +"个宝石待收集";
 	    }
 	}
         //document.getElementById("Counting").innerHTML = CountNumber;
         if(CountNumber >= 5){
             controls.enable = false;
 	if( Language == "Chinese" ){
-	    document.getElementById("Collecttext").innerHTML = "恭喜完成寶石收集，請稍待片刻";
-	}if( Language == "English" ){
-	    document.getElementById("Collecttext").innerHTML = "You’ve gotten all the stones, please wait";
+	    document.getElementById("Collecttext").innerHTML = "恭喜完成宝石收集，请稍待片刻";
 	}
             var EndGameAnim = new TimelineLite();
             EndGameAnim.to("#EndingGame", 0.5 , { y:0,opacity:1 ,onComplete: function() {
@@ -984,16 +926,10 @@
      }
     function EndGameLink(){
 	if( Language == "Chinese" && Endlink == false){
-	    document.getElementById("EndingButton").onclick = location.href='https://docs.google.com/forms/d/e/1FAIpQLSdxtW7MF_gqMoaNzTzaWeu0XBi-DIE4NG3AZ3Bs7rIJ1kZ3ew/viewform';
-        }if( Language == "English"  && Endlink == false){
-	    //document.getElementById("EndingButton").onclick = location.href='https://docs.google.com/forms/d/e/1FAIpQLSfm7-JUeIV-QGzwXEv0ZvjFN09UdyjlFZnKP-D5isRNxr34TA/viewform';
- 	    document.getElementById("EndingButton").onclick = location.href='https://ding.fanqier.cn/f/82izyhke';
-
-	}
-	    Endlink = true;
+	    document.getElementById("EndingButton").onclick = location.href='https://ding.fanqier.cn/f/82izyhke';
+        }
+	Endlink = true;
      }
-	
-	
         </script>
     </body>
 </html>
